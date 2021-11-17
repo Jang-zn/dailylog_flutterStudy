@@ -1,4 +1,8 @@
+import 'package:dailylog/page/write_page.dart';
 import 'package:flutter/material.dart';
+
+import 'data/diary.dart';
+import 'data/util.dart';
 
 void main(){
   runApp(DailyLog());
@@ -31,8 +35,17 @@ class _DailyLogMainState extends State<DailyLogMain> {
       floatingActionButton: FloatingActionButton(
         child:Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.black,
-        onPressed: (){
-          //TODO 작성페이지로 이동
+        onPressed: () async {
+          await Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder:(ctx)=>DiaryWritePage(
+                      diary: Diary(
+                        date : Utils.getFormatTime(DateTime.now()),
+                        title : "",
+                        status :0,
+                        image:"",
+                        memo:"",
+                      ))));
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
