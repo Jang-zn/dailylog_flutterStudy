@@ -14,7 +14,12 @@ class DailyLog extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DailyLogMain(),
-      theme : ThemeData.light()
+      theme : ThemeData(
+      primarySwatch: Colors.blueGrey,
+      primaryColor: const Color(0xFF607d8b),
+      accentColor: const Color(0xFF607d8b),
+      canvasColor: const Color(0xFFfafafa),
+      )
     );
   }
 }
@@ -31,7 +36,9 @@ class _DailyLogMainState extends State<DailyLogMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+
+      ),
       floatingActionButton: FloatingActionButton(
         child:Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.black,
