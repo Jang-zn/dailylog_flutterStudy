@@ -9,27 +9,81 @@ class DailyLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DailyLogMain(
-                title : "DailyLog",
-        ),
+      home: DailyLogMain(),
       theme : ThemeData.light()
     );
   }
 }
 
 class DailyLogMain extends StatefulWidget {
-  const DailyLogMain({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const DailyLogMain({Key? key}) : super(key: key);
   @override
   _DailyLogMainState createState() => _DailyLogMainState();
 }
 
 class _DailyLogMainState extends State<DailyLogMain> {
+  int _idx=0;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child : Text("start")
+    return Scaffold(
+      appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        child:Icon(Icons.add, color: Colors.white,),
+        backgroundColor: Colors.black,
+        onPressed: (){
+          //TODO 작성페이지로 이동
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items:const [
+          BottomNavigationBarItem(
+            icon:Icon(Icons.today),
+            label: "오늘",
+          ),
+          BottomNavigationBarItem(
+            icon:Icon(Icons.event_note),
+            label:"기록"
+          ),
+          BottomNavigationBarItem(
+            icon:Icon(Icons.bar_chart),
+            label:"통계"
+          )
+        ],
+        onTap: (idx){
+          _idx=idx;
+          setState(() {
+
+          });
+        },
+        currentIndex: _idx,
+      ),
+      body:Container(
+        child : getPage(),
+      ),
     );
+  }
+
+  Widget getPage(){
+    if(_idx==0){
+      return getToday();
+    }else if(_idx==1){
+      return getHistory();
+    }else{
+      return getChart();
+    }
+  }
+
+  Widget getHistory(){
+    return Container(child:Text("history"));
+  }
+
+  Widget getToday(){
+    return Container(child:Text("Today"));
+  }
+
+  Widget getChart(){
+    return Container(child:Text("Chart"));
   }
 }
 
