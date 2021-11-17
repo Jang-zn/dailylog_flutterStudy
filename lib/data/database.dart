@@ -28,13 +28,11 @@ class DatabaseHelper{
     //Diary 테이블 쿼리 수정
     await db.execute('''
     CREATE TABLE IF NOT EXISTS $diaryTable (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
       date INTEGER DEFAULT 0,
       title String,
       memo String, 
-      color INTEGER,
-      category String,
-      done INTEGER
+      image String,
+      status INTEGER DEFAULT 0
       )
     ''');
   }
@@ -46,14 +44,16 @@ class DatabaseHelper{
   //CRUD
   Future<int> insertDiary(Diary diary) async {
     Database? db = await instance.database;
-    if(diary.id==null){
+    List<Diary> d = await getDiaryFromDate(diary.date);
+    
+    
+    if(d.isEmpty){
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
         "memo" : diary.memo,
-        "color" : diary.color,
-        "category" : diary.category,
-        "done" : 0
+        "image":diary.image,
+        "status":diary.status,
       };
       return await db!.insert(diaryTable, row);
     }else{
@@ -61,11 +61,10 @@ class DatabaseHelper{
         "title" : diary.title,
         "date" : diary.date,
         "memo" : diary.memo,
-        "color" : diary.color,
-        "category" : diary.category,
-        "done" : diary.done
+        "image":diary.image,
+        "status":diary.status,
       };
-      return await db!.update(diaryTable, row, where: "id=?", whereArgs: [diary.id]);
+      return await db!.update(diaryTable, row, where: "id=?", whereArgs: [diary.date]);
     }
   }
 
@@ -75,13 +74,12 @@ class DatabaseHelper{
 
     var queries = await db!.query(diaryTable,orderBy:"date DESC");
     for(var q in queries){
-      list.add(Diary(id : q["id"] as int,
+      list.add(Diary(
         title : q["title"] .toString(),
-        color : q["color"] as int,
+        status : q["status"] as int,
         memo : q["memo"] .toString(),
-        category: q["category"] .toString(),
         date : q["date"] as int,
-        done : q["done"] as int
+        image : q["image"].toString()
       ));
     }
     return list;
@@ -93,13 +91,12 @@ class DatabaseHelper{
 
     var queries = await db!.query(diaryTable, where: "date=?", whereArgs: [date]);
     for(var q in queries){
-      list.add(Diary(id : q["id"] as int,
-          title : q["title"].toString(),
-          color : q["color"] as int,
-          memo : q["memo"].toString(),
-          category: q["category"].toString(),
+      list.add(Diary(
+          title : q["title"] .toString(),
+          status : q["status"] as int,
+          memo : q["memo"] .toString(),
           date : q["date"] as int,
-          done : q["done"] as int
+          image : q["image"].toString()
       ));
     }
     return list;
@@ -107,7 +104,7 @@ class DatabaseHelper{
 
   Future<int?> updateDiary(Diary diary) async{
     Database? db = await instance.database;
-    Future<int> result = db!.update(diaryTable, diary.getMap(), where:"id=?",whereArgs: [diary.id]);
+    Future<int> result = db!.update(diaryTable, diary.getMap(), where:"date=?",whereArgs: [diary.date]);
     return result;
   }
 }

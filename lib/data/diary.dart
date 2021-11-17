@@ -1,27 +1,23 @@
 
 class Diary{
-  int? id;
   String title;
   String memo;
-  String category;
-  int color;
-  int done;
-  int date; // 날짜비교를 위해서 int 사용..??
+  String image;
+  int date;
+  int status;
 
   Diary(
       {
-        this.id, required this.title, required this.memo, required this.category, required this.color, required this.done, required this.date
+        required this.title, required this.memo, required this.date, required this.status, required this.image
       }
       );
 
   Map<String, dynamic> getMap(){
     Map<String, dynamic> map={
-      "id":id,
       "title":title,
       "memo":memo,
-      "category":category,
-      "color":color,
-      "done":done,
+      "image":image,
+      "status":status,
       "date":date
     };
     return map;
