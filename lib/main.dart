@@ -54,6 +54,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
   DateTime _selectedDay = DateTime.now();
   List<Diary> selectedDiary = [];
 
+
   @override
   void initState() {
     super.initState();
@@ -61,8 +62,11 @@ class _DailyLogMainState extends State<DailyLogMain> {
     getSelectedDiary();
   }
 
-  void getSelectedDiary() async{
-    selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(_selectedDay));
+  void getSelectedDiary() async {
+      selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(_selectedDay));
+      setState(() {
+
+      });
   }
 
 
@@ -83,11 +87,28 @@ class _DailyLogMainState extends State<DailyLogMain> {
         child:const Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.black,
         onPressed: () async {
+          if(_idx==0) {
             await Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder:(ctx)=>DiaryWritePage(
-                        diary: todayDiary
-                    )));
+                    builder: (ctx) =>
+                        DiaryWritePage(
+                            diary: todayDiary
+                        )));
+          }else{
+            await Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (ctx) =>
+                        DiaryWritePage(
+                            diary: selectedDiary.isEmpty?Diary(
+                              title:"",
+                              content:"",
+                              date:Utils.getFormatTime(_selectedDay),
+                              status:0,
+                              image:"assets/img/wallpaper1.png"
+                            )
+                                : selectedDiary.first
+                        )));
+          }
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -150,8 +171,8 @@ class _DailyLogMainState extends State<DailyLogMain> {
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
                 },
-                onDaySelected: (selectedDay, focusedDay)async {
-                  selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(selectedDay));
+                onDaySelected: (selectedDay, focusedDay) {
+                  getSelectedDiary();
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay; // update `_focusedDay` here as well
