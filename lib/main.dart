@@ -60,12 +60,13 @@ class _DailyLogMainState extends State<DailyLogMain> {
     super.initState();
     getTodayDiary();
     getSelectedDiary();
+    print(_focusedDay);
   }
 
   void getSelectedDiary() async {
       selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(_selectedDay));
       setState(() {
-
+        _focusedDay = DateTime.now();
       });
   }
 
@@ -104,7 +105,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                               content:"",
                               date:Utils.getFormatTime(_selectedDay),
                               status:0,
-                              image:"assets/img/wallpaper1.png"
+                              image:"assets/img/wallpaper2.png"
                             )
                                 : selectedDiary.first
                         )));
@@ -128,6 +129,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
         ],
         onTap: (idx){
           _idx=idx;
+          print("idx : ${_idx}");
           setState(() {
 
           });
@@ -172,10 +174,10 @@ class _DailyLogMainState extends State<DailyLogMain> {
                   return isSameDay(_selectedDay, day);
                 },
                 onDaySelected: (selectedDay, focusedDay) {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
                   getSelectedDiary();
                   setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay; // update `_focusedDay` here as well
                   });
                 },
                 calendarFormat: _calendarFormat,
