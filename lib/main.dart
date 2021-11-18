@@ -1,12 +1,13 @@
+import 'dart:ui';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:dailylog/data/database.dart';
+import 'package:dailylog/data/diary.dart';
+import 'package:dailylog/data/util.dart';
 import 'package:dailylog/page/write_page.dart';
 import 'package:flutter/material.dart';
 
-import 'data/diary.dart';
-import 'data/util.dart';
-
 void main(){
-  runApp(DailyLog());
+  runApp(const DailyLog());
 }
 
 class DailyLog extends StatelessWidget {
@@ -14,11 +15,11 @@ class DailyLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DailyLogMain(),
+      home: const DailyLogMain(),
       theme : ThemeData(
       primarySwatch: Colors.blueGrey,
       primaryColor: const Color(0xFF607d8b),
-      accentColor: const Color(0xFF607d8b),
+      secondaryHeaderColor: const Color(0xFF607d8b),
       canvasColor: const Color(0xFFfafafa),
       )
     );
@@ -34,7 +35,13 @@ class DailyLogMain extends StatefulWidget {
 class _DailyLogMainState extends State<DailyLogMain> {
   int _idx=0;
   DatabaseHelper dbHelper = DatabaseHelper.instance;
-  Diary? todayDiary;
+  Diary todayDiary = Diary(
+   image:"assets/img/wallpaper1.png",
+   status:0,
+   content:"",
+   title:"",
+   date:Utils.getFormatTime(DateTime.now()),
+  );
   List<String> statusImages = [
     "assets/img/weather1.png",
     "assets/img/weather2.png",
@@ -42,9 +49,9 @@ class _DailyLogMainState extends State<DailyLogMain> {
     "assets/img/weather4.png"
   ];
 
-
   @override
   void initState() {
+    super.initState();
     getTodayDiary();
   }
 
@@ -52,32 +59,24 @@ class _DailyLogMainState extends State<DailyLogMain> {
     List<Diary> list = await dbHelper.getDiaryFromDate(Utils.getFormatTime(DateTime.now()));
     if(list.isNotEmpty){
       todayDiary=list.first;
+      getPage();
+      setState(() {
+      });
     }
-    setState(() {
-
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-      ),
       floatingActionButton: FloatingActionButton(
         child:Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.black,
         onPressed: () async {
-          await Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder:(ctx)=>DiaryWritePage(
-                      diary: Diary(
-                        date : Utils.getFormatTime(DateTime.now()),
-                        title : "",
-                        status :0,
-                        image:"",
-                        content:"",
-                      ))));
+            await Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder:(ctx)=>DiaryWritePage(
+                        diary: todayDiary
+                    )));
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -120,7 +119,24 @@ class _DailyLogMainState extends State<DailyLogMain> {
   }
 
   Widget getHistory(){
-    return Container(child:Text("history"));
+    return ListView.builder(
+        itemCount: 3,
+        itemBuilder: (ctx, idx) {
+          if(idx==0){
+            return Container(
+              child: TableCalendar(
+                firstDay: DateTime.utc(2021,1,1),
+                lastDay:DateTime.utc(2030,12,31),
+                focusedDay: DateTime.now(),
+              ),
+            );
+          }else{
+            return Container();
+          }
+          return Container();
+
+        }
+    );
   }
 
   Widget getToday(){
@@ -133,7 +149,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
         child:Stack(
             children:[
               Positioned.fill(
-                child: Image.asset(todayDiary!.image, fit:BoxFit.cover)
+                child: Opacity(child:Image.asset(todayDiary.image, fit:BoxFit.cover,),opacity: 0.7,),
               ),
               Positioned.fill(
                 child:ListView(
@@ -141,9 +157,41 @@ class _DailyLogMainState extends State<DailyLogMain> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
-                        Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        Image.asset(statusImages[todayDiary!.status], fit:BoxFit.contain),
+                        Container(
+                            child : Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            padding:EdgeInsets.all(6),
+                            margin:EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color:Colors.white.withOpacity(0.5),
+                            ),
+                        ),
+                        Container(
+                            child:Image.asset(statusImages[todayDiary.status], fit:BoxFit.contain, width: 60, height:60),
+                              decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            margin:EdgeInsets.all(10),
+                        ),
                       ]
+                    ),
+                    Container(
+                        child:Column(
+                          children:[
+                          Text(todayDiary.title, style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            Container(height: 20,),
+                            Text(todayDiary.content)
+                          ],
+                          crossAxisAlignment :CrossAxisAlignment.start,
+                        ),
+                      padding:EdgeInsets.all(10),
+                      margin:EdgeInsets.all(10),
+                      height:350,
+                      decoration:BoxDecoration(
+                        color:Colors.white54,
+                        borderRadius: BorderRadius.circular(10),
+                      )
                     )
                   ]
                 )
