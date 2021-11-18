@@ -178,13 +178,13 @@ class _DailyLogMainState extends State<DailyLogMain> {
                           margin:EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color:Colors.grey.withOpacity(0.5),
+                            color:Colors.grey.withOpacity(0.2),
                           ),
                         ),
                         Container(
                           child:Image.asset(statusImages[selectedDiary.first.status], fit:BoxFit.contain, width: 60, height:60),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.6),
+                            color: Colors.grey.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(100),
                           ),
                           margin:EdgeInsets.all(10),
@@ -204,7 +204,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                       margin:EdgeInsets.all(10),
                       height:350,
                       decoration:BoxDecoration(
-                        color:Colors.grey.withOpacity(0.3),
+                        color:Colors.grey.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(10),
                       )
                   )
