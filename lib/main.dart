@@ -55,11 +55,16 @@ class _DailyLogMainState extends State<DailyLogMain> {
   List<Diary> selectedDiary = [];
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     getTodayDiary();
+    getSelectedDiary();
+  }
+
+  void getSelectedDiary() async{
     selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(_selectedDay));
   }
+
 
   void getTodayDiary() async {
     List<Diary> list = await dbHelper.getDiaryFromDate(Utils.getFormatTime(DateTime.now()));
@@ -72,9 +77,10 @@ class _DailyLogMainState extends State<DailyLogMain> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child:Icon(Icons.add, color: Colors.white,),
+        child:const Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.black,
         onPressed: () async {
             await Navigator.of(context).push(
@@ -129,7 +135,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
 
 
   Widget getHistory() {
-    if(selectedDiary==null){
+    if(selectedDiary.isEmpty){
       Container();
     }
     return ListView.builder(
@@ -173,8 +179,8 @@ class _DailyLogMainState extends State<DailyLogMain> {
                               "${Utils.numToDateTime(selectedDiary.first.date).year}."
                               "${Utils.numToDateTime(selectedDiary.first.date).month}."
                               "${Utils.numToDateTime(selectedDiary.first.date).day}",
-                              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                          padding:EdgeInsets.all(6),
+                              style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          padding:const EdgeInsets.all(6),
                           margin:EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -187,7 +193,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                             color: Colors.grey.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(100),
                           ),
-                          margin:EdgeInsets.all(10),
+                          margin:const EdgeInsets.all(10),
                         ),
                       ]
                   ),
@@ -200,7 +206,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                         ],
                         crossAxisAlignment :CrossAxisAlignment.start,
                       ),
-                      padding:EdgeInsets.all(10),
+                      padding:const EdgeInsets.all(10),
                       margin:EdgeInsets.all(10),
                       height:350,
                       decoration:BoxDecoration(
@@ -211,18 +217,13 @@ class _DailyLogMainState extends State<DailyLogMain> {
                 ]
             );
           }
-          return Container();
+
 
         }
     );
   }
 
   Widget getToday(){
-    if(todayDiary==null) {
-      return Container(
-          child: Text("일기 작성하기")
-      );
-    }else{
       return Container(
         child:Stack(
             children:[
@@ -236,8 +237,8 @@ class _DailyLogMainState extends State<DailyLogMain> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Container(
-                            child : Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                            padding:EdgeInsets.all(6),
+                            child : Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            padding:const EdgeInsets.all(6),
                             margin:EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -257,7 +258,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                     Container(
                         child:Column(
                           children:[
-                          Text(todayDiary.title, style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          Text(todayDiary.title==""?"일기를 작성하세요":todayDiary.title, style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                             Container(height: 20,),
                             Text(todayDiary.content)
                           ],
@@ -277,7 +278,6 @@ class _DailyLogMainState extends State<DailyLogMain> {
             ]
         )
       );
-    }
   }
 
   Widget getChart(){

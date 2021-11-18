@@ -47,7 +47,7 @@ class DatabaseHelper{
     List<Diary> d = await getDiaryFromDate(diary.date);
     
     
-    if(d==null){
+    if(d.isEmpty){
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
