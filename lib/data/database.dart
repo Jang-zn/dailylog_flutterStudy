@@ -30,7 +30,7 @@ class DatabaseHelper{
     CREATE TABLE IF NOT EXISTS $diaryTable (
       date INTEGER DEFAULT 0,
       title String,
-      memo String, 
+      content String, 
       image String,
       status INTEGER DEFAULT 0
       )
@@ -51,7 +51,7 @@ class DatabaseHelper{
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
-        "memo" : diary.content,
+        "content" : diary.content,
         "image":diary.image,
         "status":diary.status,
       };
@@ -60,7 +60,7 @@ class DatabaseHelper{
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
-        "memo" : diary.content,
+        "content" : diary.content,
         "image":diary.image,
         "status":diary.status,
       };
@@ -77,7 +77,7 @@ class DatabaseHelper{
       list.add(Diary(
         title : q["title"] .toString(),
         status : q["status"] as int,
-        content : q["memo"] .toString(),
+        content : q["content"] .toString(),
         date : q["date"] as int,
         image : q["image"].toString()
       ));
@@ -94,7 +94,7 @@ class DatabaseHelper{
       list.add(Diary(
           title : q["title"] .toString(),
           status : q["status"] as int,
-          content : q["memo"] .toString(),
+          content : q["content"] .toString(),
           date : q["date"] as int,
           image : q["image"].toString()
       ));

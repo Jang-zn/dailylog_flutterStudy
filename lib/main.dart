@@ -34,7 +34,7 @@ class DailyLogMain extends StatefulWidget {
 class _DailyLogMainState extends State<DailyLogMain> {
   int _idx=0;
   DatabaseHelper dbHelper = DatabaseHelper.instance;
-  late final Diary todayDiary;
+  Diary? todayDiary;
   List<String> statusImages = [
     "assets/img/weather1.png",
     "assets/img/weather2.png",
@@ -133,7 +133,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
         child:Stack(
             children:[
               Positioned.fill(
-                child: Image.asset(todayDiary.image, fit:BoxFit.cover)
+                child: Image.asset(todayDiary!.image, fit:BoxFit.cover)
               ),
               Positioned.fill(
                 child:ListView(
@@ -142,7 +142,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        Image.asset(statusImages[todayDiary.status], fit:BoxFit.contain),
+                        Image.asset(statusImages[todayDiary!.status], fit:BoxFit.contain),
                       ]
                     )
                   ]

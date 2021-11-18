@@ -32,6 +32,7 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
 
   @override
   void initState() {
+    super.initState();
     titleController.text = widget.diary.title;
     contentController.text = widget.diary.content;
   }
@@ -42,7 +43,7 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
         appBar: AppBar(
           actions: [
             TextButton(
-              child: Text("저장",
+              child: const Text("저장",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -76,14 +77,14 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
               );
             } else if (idx == 1) {
               return Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List.generate(statusImages.length, (index) {
                       return InkWell(
                         child: Container(
                           child: Image.asset(statusImages[index]),
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: index == widget.diary.status
@@ -105,15 +106,15 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
                   ));
             } else if (idx == 2) {
               return Container(
-                child: Text("제목",
+                child: const Text("제목",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 margin:
-                    EdgeInsets.only(top: 15, bottom: 5, right: 25, left: 25),
+                    const EdgeInsets.only(top: 15, bottom: 5, right: 25, left: 25),
               );
             } else if (idx == 3) {
               return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
@@ -122,15 +123,15 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
                       ))));
             } else if (idx == 4) {
               return Container(
-                child: Text("내용",
+                child: const Text("내용",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 margin:
-                    EdgeInsets.only(top: 25, bottom: 5, right: 25, left: 25),
+                    const EdgeInsets.only(top: 25, bottom: 5, right: 25, left: 25),
               );
             } else {
               return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                     controller: contentController,
                     maxLines: 15,
@@ -141,7 +142,6 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
                     )),
                   ));
             }
-            return Container();
           },
           itemCount: 6,
         ));
