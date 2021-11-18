@@ -204,7 +204,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                       margin:EdgeInsets.all(10),
                       height:350,
                       decoration:BoxDecoration(
-                        color:Colors.grey.withOpacity(0.6),
+                        color:Colors.grey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(10),
                       )
                   )
