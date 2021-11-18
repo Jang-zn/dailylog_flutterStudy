@@ -3,9 +3,9 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper{
-  static final _databaseName = "diary.db";
-  static final _databaseVersion = 1;
-  static final diaryTable = "diary";
+  static const _databaseName = "diary.db";
+  static const _databaseVersion = 1;
+  static const diaryTable = "diary";
 
   DatabaseHelper._privateConstructor();
 
@@ -64,7 +64,7 @@ class DatabaseHelper{
         "image":diary.image,
         "status":diary.status,
       };
-      return await db!.update(diaryTable, row, where: "id=?", whereArgs: [diary.date]);
+      return await db!.update(diaryTable, row, where: "date=?", whereArgs: [diary.date]);
     }
   }
 

@@ -49,6 +49,8 @@ class _DiaryWritePageState extends State<DiaryWritePage> {
                       fontSize: 20,
                       color: Colors.white)),
               onPressed: () async {
+                widget.diary.title = titleController.text;
+                widget.diary.content = contentController.text;
                 await dbHelper.insertDiary(widget.diary);
                 Navigator.of(context).pop();
               },
