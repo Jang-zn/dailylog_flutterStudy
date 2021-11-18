@@ -51,7 +51,7 @@ class DatabaseHelper{
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
-        "memo" : diary.memo,
+        "memo" : diary.content,
         "image":diary.image,
         "status":diary.status,
       };
@@ -60,7 +60,7 @@ class DatabaseHelper{
       Map<String, dynamic> row = {
         "title" : diary.title,
         "date" : diary.date,
-        "memo" : diary.memo,
+        "memo" : diary.content,
         "image":diary.image,
         "status":diary.status,
       };
@@ -77,7 +77,7 @@ class DatabaseHelper{
       list.add(Diary(
         title : q["title"] .toString(),
         status : q["status"] as int,
-        memo : q["memo"] .toString(),
+        content : q["memo"] .toString(),
         date : q["date"] as int,
         image : q["image"].toString()
       ));
@@ -94,7 +94,7 @@ class DatabaseHelper{
       list.add(Diary(
           title : q["title"] .toString(),
           status : q["status"] as int,
-          memo : q["memo"] .toString(),
+          content : q["memo"] .toString(),
           date : q["date"] as int,
           image : q["image"].toString()
       ));

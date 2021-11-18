@@ -1,3 +1,4 @@
+import 'package:dailylog/data/database.dart';
 import 'package:dailylog/page/write_page.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,30 @@ class DailyLogMain extends StatefulWidget {
 
 class _DailyLogMainState extends State<DailyLogMain> {
   int _idx=0;
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  late final Diary todayDiary;
+  List<String> statusImages = [
+    "assets/img/weather1.png",
+    "assets/img/weather2.png",
+    "assets/img/weather3.png",
+    "assets/img/weather4.png"
+  ];
+
+
+  @override
+  void initState() {
+    getTodayDiary();
+  }
+
+  void getTodayDiary() async {
+    List<Diary> list = await dbHelper.getDiaryFromDate(Utils.getFormatTime(DateTime.now()));
+    if(list.isNotEmpty){
+      todayDiary=list.first;
+    }
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +76,7 @@ class _DailyLogMainState extends State<DailyLogMain> {
                         title : "",
                         status :0,
                         image:"",
-                        memo:"",
+                        content:"",
                       ))));
         },
       ),
@@ -99,7 +124,34 @@ class _DailyLogMainState extends State<DailyLogMain> {
   }
 
   Widget getToday(){
-    return Container(child:Text("Today"));
+    if(todayDiary==null) {
+      return Container(
+          child: Text("일기 작성하기")
+      );
+    }else{
+      return Container(
+        child:Stack(
+            children:[
+              Positioned.fill(
+                child: Image.asset(todayDiary.image, fit:BoxFit.cover)
+              ),
+              Positioned.fill(
+                child:ListView(
+                  children:[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Text("${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        Image.asset(statusImages[todayDiary.status], fit:BoxFit.contain),
+                      ]
+                    )
+                  ]
+                )
+              )
+            ]
+        )
+      );
+    }
   }
 
   Widget getChart(){

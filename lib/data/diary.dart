@@ -1,21 +1,21 @@
 
 class Diary{
   String title;
-  String memo;
+  String content;
   String image;
   int date;
   int status;
 
   Diary(
       {
-        required this.title, required this.memo, required this.date, required this.status, required this.image
+        required this.title, required this.content, required this.date, required this.status, required this.image
       }
       );
 
   Map<String, dynamic> getMap(){
     Map<String, dynamic> map={
       "title":title,
-      "memo":memo,
+      "memo":content,
       "image":image,
       "status":status,
       "date":date
