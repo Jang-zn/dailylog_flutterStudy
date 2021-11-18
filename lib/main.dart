@@ -49,18 +49,23 @@ class _DailyLogMainState extends State<DailyLogMain> {
     "assets/img/weather4.png"
   ];
 
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
+  List<Diary> selectedDiary = [];
+
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     getTodayDiary();
+    selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(_selectedDay));
   }
 
   void getTodayDiary() async {
     List<Diary> list = await dbHelper.getDiaryFromDate(Utils.getFormatTime(DateTime.now()));
-    if(list.isNotEmpty){
-      todayDiary=list.first;
-      getPage();
+    if(list.isNotEmpty) {
       setState(() {
+        todayDiary = list.first;
       });
     }
   }
@@ -118,20 +123,93 @@ class _DailyLogMainState extends State<DailyLogMain> {
     }
   }
 
-  Widget getHistory(){
+
+
+
+
+
+  Widget getHistory() {
+    if(selectedDiary==null){
+      Container();
+    }
     return ListView.builder(
-        itemCount: 3,
+        itemCount: 2,
         itemBuilder: (ctx, idx) {
           if(idx==0){
             return Container(
               child: TableCalendar(
                 firstDay: DateTime.utc(2021,1,1),
                 lastDay:DateTime.utc(2030,12,31),
-                focusedDay: DateTime.now(),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay)async {
+                  selectedDiary = await dbHelper.getDiaryFromDate(Utils.getFormatTime(selectedDay));
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay; // update `_focusedDay` here as well
+                  });
+                },
+                calendarFormat: _calendarFormat,
+                onFormatChanged: (format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                },
               ),
             );
           }else{
-            return Container();
+            if(selectedDiary.isEmpty){
+              return Container();
+            }
+            return Column(
+                children:[
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Container(
+                          child : Text(""
+                              "${Utils.numToDateTime(selectedDiary.first.date).year}."
+                              "${Utils.numToDateTime(selectedDiary.first.date).month}."
+                              "${Utils.numToDateTime(selectedDiary.first.date).day}",
+                              style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          padding:EdgeInsets.all(6),
+                          margin:EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color:Colors.grey.withOpacity(0.5),
+                          ),
+                        ),
+                        Container(
+                          child:Image.asset(statusImages[selectedDiary.first.status], fit:BoxFit.contain, width: 60, height:60),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          margin:EdgeInsets.all(10),
+                        ),
+                      ]
+                  ),
+                  Container(
+                      child:Column(
+                        children:[
+                          Text(selectedDiary.first.title, style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          Container(height: 20,),
+                          Text(selectedDiary.first.content)
+                        ],
+                        crossAxisAlignment :CrossAxisAlignment.start,
+                      ),
+                      padding:EdgeInsets.all(10),
+                      margin:EdgeInsets.all(10),
+                      height:350,
+                      decoration:BoxDecoration(
+                        color:Colors.grey.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(10),
+                      )
+                  )
+                ]
+            );
           }
           return Container();
 
